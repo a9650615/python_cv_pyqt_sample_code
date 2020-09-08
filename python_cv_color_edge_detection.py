@@ -6,7 +6,8 @@ import cv2
 import sys
 import numpy as np
 
-cap_send = cv2.VideoCapture('videotestsrc ! video/x-raw ! videoconvert ! appsink', cv2.CAP_GSTREAMER)
+#cap_send = cv2.VideoCapture('videotestsrc ! video/x-raw ! videoconvert ! appsink', cv2.CAP_GSTREAMER)
+cap_send = cv2.VideoCapture('v4l2src device=/dev/video0 ! video/x-raw,width=640,height=480,framerate=30/1 ! videoconvert ! appsink', cv2.CAP_GSTREAMER)
 
 class Thread(QThread):
     changePixmap = pyqtSignal(QtGui.QImage)
