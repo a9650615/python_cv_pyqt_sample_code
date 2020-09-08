@@ -19,6 +19,7 @@ class Thread(QThread):
             # cv2.imwrite('output.png', frame)
             while True:
                 ret, frame = cap_send.read()
+                frame = cv2.flip(frame, 1)
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 faces = face_cascade.detectMultiScale(gray, 1.4, 5)
                 for (x,y,w,h) in faces:
