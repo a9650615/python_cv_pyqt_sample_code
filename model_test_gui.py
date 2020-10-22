@@ -10,6 +10,7 @@ import numpy as np
 your_exe_file_address = "./Mnist" # example
 your_command = 'mnist_model.tflite'
 your_module_address = "five.bin" # example
+first_run = True
 
 cap_send = cv2.VideoCapture('v4l2src device=/dev/video0 ! video/x-raw,width=640,height=480,framerate=30/1 ! videoconvert ! appsink', cv2.CAP_GSTREAMER)
 
@@ -20,8 +21,6 @@ process = Popen([your_exe_file_address], stdout=PIPE, stdin=PIPE, stderr=PIPE, s
 # # print('out', output)
 # process.poll()
 # # print('out', out.strip())4
-process.stdin.write(b"five.bin\r\n")
-process.stdin.flush()
 # # process.stdin.close()
 # # process.stdin.close()
 # # data,ww = process.communicate(b"five.bin")
@@ -77,6 +76,13 @@ class Thread(QThread):
                 # cv2.imwrite('save.png', crop_img)
 
                 saveImgToBin(crop_img)
+                global first_run
+                if first_run == True:
+                    print("send")
+                    process.stdin.write(b'./input.bin\r\n')
+                    process.stdin.flush()
+                    first_run = False
+                
                 # tf
                 output = process.stdout.readline()
 
@@ -89,11 +95,9 @@ class Thread(QThread):
                     # print('out2', output.strip())
                     self.str_signal.emit(output.strip().decode("utf-8") )
                 if self.getRes == True:
-                    # process.communicate(b"five.bin\n")
-                    process.stdin.write(b'input.bin\r\n')
+                    process.stdin.write(b'./input.bin\r\n')
                     process.stdin.flush()
                 # process.stdin.close()
-                
                 rc = process.poll()
                 #end tf
                 rgbImage = cv2.cvtColor(crop_img, cv2.COLOR_BGR2RGB)
