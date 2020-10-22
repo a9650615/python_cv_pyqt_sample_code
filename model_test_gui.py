@@ -116,10 +116,11 @@ class DisplayImageWidget(QtWidgets.QWidget):
         # self.button.clicked.connect(self.show_image)
         self.image_frame = QtWidgets.QLabel()
         self.result_label = QtWidgets.QLabel()
+        self.response_label = QtWidgets.QLabel()
         self.result_label.resize(300, 100)
         self.result_label.setFont(QtGui.QFont('Times', 15))
-        
-        self.result_label.setStyleSheet("border: 1px solid black;") 
+        self.response_label.setFont(QtGui.QFont('Times', 15))
+        self.result_label.setStyleSheet("QLabel { color : red; }") 
 
         self.label = QtWidgets.QLabel(self)
         self.label.move(280, 120)
@@ -127,6 +128,7 @@ class DisplayImageWidget(QtWidgets.QWidget):
 
         self.layout = QtWidgets.QVBoxLayout()
         self.layout.addWidget(self.result_label)
+        self.layout.addWidget(self.response_label)
         # self.layout.addWidget(self.button)
         self.layout.addWidget(self.image_frame)
         self.layout.addWidget(self.label)
@@ -142,7 +144,14 @@ class DisplayImageWidget(QtWidgets.QWidget):
 
     # @QtCore.pyqtSlot(QtWidgets.QLabel)
     def setText(self, text):
-        self.result_label.setText(text)
+        split_text = text.split(",")
+        if (len(split_text) > 1):
+            self.result_label.setText(split_text[0])
+            self.response_label.setText(split_text[1])
+        else:
+            self.result_label.setText(text)
+        
+        
 
 
     @QtCore.pyqtSlot()
